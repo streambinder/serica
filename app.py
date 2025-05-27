@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, send_file
 
 app = Flask(__name__, template_folder=os.getcwd())
 
+TITLE = os.getenv("TITLE", "Gallery")
 MEDIA_EXTENSIONS = (".jpg", ".jpeg", ".png", ".mp4", ".mov")
 
 
@@ -51,6 +52,7 @@ def gallery(gallery: str):
         galleries=get_galleries(),
         gallery_media=partition_media(get_gallery_images(gallery)),
         gallery_name=gallery,
+        title=f"{gallery} — {TITLE}",
     )
 
 
@@ -61,6 +63,7 @@ def index():
         galleries=get_galleries(),
         gallery_media=partition_media(get_gallery_images()),
         gallery_name="",
+        title=TITLE,
     )
 
 

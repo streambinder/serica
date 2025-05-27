@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Galleria Immagini</title>
+  <title>{{ title }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap" rel="stylesheet">
@@ -117,7 +117,6 @@
       overflow: hidden;
     }
 
-
     .row-2-1 {
       gap: 0;
     }
@@ -148,7 +147,7 @@
       <img src="/media?name={{ gallery_name }}/cover.jpg"/>
       <img class="cover-logo" src="/branding/logo.png" alt="Logo"/>
       {% if gallery_name == "" %}
-      <div class="cover-title">Francesco & Chiara</div>
+      <div class="cover-title">{{ title }}</div>
       {% endif %}
 
       <nav class="navbar">
