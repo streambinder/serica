@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Galleria Immagini</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: "Bodoni Moda", serif;
+      background: #fff;
+      color: #fff;
+    }
+
+    .navbar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 20px;
+      z-index: 20;
+      font-weight: bold;
+      font-size: 1rem;
+      color: white;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    /* Link navbar */
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 10px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      border-radius: 4px;
+    }
+
+    .navbar a:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .gallery {
+      width: 100%;
+    }
+
+    .row-cover {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .row-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .cover-logo {
+      position: absolute;
+      top: 20px;   /* distanza dal bordo superiore */
+      left: 20px;  /* distanza dal bordo sinistro */
+      width: 200px !important;
+      height: auto !important;
+      z-index: 10; /* sopra l'immagine */
+      pointer-events: none; /* per non bloccare click */
+    }
+    .cover-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffffffd6;
+      font-size: 7em;
+      font-weight: bold;
+      /* text-shadow: 2px 2px 6px rgba(0,0,0,0.7); */
+      pointer-events: none; /* so it doesn't interfere with clicks */
+      text-align: center;
+      white-space: nowrap;
+      font-optical-sizing: auto;
+      font-weight: 100;
+      font-style: normal;
+    }
+
+    .row {
+      display: flex;
+      width: 100%;
+      height: 75vh;
+      overflow: hidden;
+    }
+
+    .row-fullscreen {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .row-1-2 {
+      gap: 0;
+    }
+    .row-1-2 .small {
+      width: 33.3333%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .row-1-2 .large {
+      width: 66.6667%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+
+    .row-2-1 {
+      gap: 0;
+    }
+    .row-2-1 .large {
+      width: 66.6667%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .row-2-1 .small {
+      width: 33.3333%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .row img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="gallery">
+    <div class="row-cover">
+      <img src="/media?name={{ gallery_name }}/cover.jpg"/>
+      <img class="cover-logo" src="/branding/logo.png" alt="Logo"/>
+      {% if gallery_name == "" %}
+      <div class="cover-title">Francesco & Chiara</div>
+      {% endif %}
+
+      <nav class="navbar">
+      {% if gallery_name != "" %}
+        <a href="/">Home</a>
+      {% endif %}
+      {% for gallery in galleries %}
+        <a href="/{{ gallery }}">{{ gallery }}</a>
+      {% endfor %}
+    </nav>
+
+    </div>
+
+    {% for paths in gallery_media %}
+      {% if paths|length == 2 %}
+        {% if loop.index % 3 == 1 %}
+    <div class="row row-1-2">
+      <div class="small"><img src="/media?name={{ paths[0] }}"/></div>
+      <div class="large"><img src="/media?name={{ paths[1] }}"/></div>
+    </div>
+        {% elif loop.index % 3 == 2 %}
+    <div class="row row-2-1">
+      <div class="large"><img src="/media?name={{ paths[0] }}"/></div>
+      <div class="small"><img src="/media?name={{ paths[1] }}"/></div>
+    </div>
+        {% endif %}
+      {% else %}
+    <div class="row row-fullscreen"><img src="/media?name={{ paths[0] }}"/></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</body>
+</html>
