@@ -11,3 +11,4 @@ COPY gallery.html.j2 .
 RUN pip install --no-cache-dir Flask
 EXPOSE 5000
 CMD ["flask", "run"]
+LABEL org.opencontainers.image.source=https://github.com/streambinder/streambinder
