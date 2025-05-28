@@ -18,5 +18,5 @@ WORKDIR /app
 COPY app.py .
 COPY gallery.html.j2 .
 EXPOSE 5000
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["waitress-serve", "--host", "0.0.0.0", "--port", "5000", "app:app"]
 LABEL org.opencontainers.image.source=https://github.com/streambinder/streambinder

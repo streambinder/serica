@@ -65,7 +65,3 @@ def index():
         gallery_name="",
         title=TITLE,
     )
-
-
-if __name__ == "__main__":
-    app.run()
