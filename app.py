@@ -7,29 +7,29 @@ app = Flask(__name__, template_folder=os.getcwd())
 
 TITLE = os.getenv("TITLE", "Gallery")
 MEDIA_EXTENSIONS = (".jpg", ".jpeg", ".png", ".mp4", ".mov")
+GRID_PATTERN = [2, 2, 1]
 
 
 def get_galleries() -> list[str]:
     return [fdir for fdir in os.listdir("/data") if os.path.isdir(f"/data/{fdir}")]
 
 
-def get_gallery_images(gallery: Optional[str] = None) -> list[str]:
+def get_gallery_images(gallery_name: Optional[str] = None) -> list[str]:
     return [
-        f"{gallery or ''}/{fname}"
-        for fname in os.listdir(f"/data/{gallery or ''}")
+        f"{gallery_name or ''}/{fname}"
+        for fname in os.listdir(f"/data/{gallery_name or ''}")
         if fname.lower().endswith(MEDIA_EXTENSIONS) and fname != "cover.jpg"
     ]
 
 
-def partition_media(media: list[str]) -> list[list[str]]:
-    result = []
+def partition_grid(items: list[str]) -> list[list[str]]:
     i = 0
-    pattern = [2, 2, 1]
-    while i < len(media):
-        for size in pattern:
-            if i >= len(media):
+    result = []
+    while i < len(items):
+        for size in GRID_PATTERN:
+            if i >= len(items):
                 break
-            group = media[i : i + size]
+            group = items[i : i + size]
             result.append(group)
             i += size
     return result
@@ -50,14 +50,14 @@ def branding(asset: str):
     return send_file(f"/branding/{asset}", mimetype="image")
 
 
-@app.route("/<gallery>")
-def gallery(gallery: str):
+@app.route("/<gallery_name>")
+def gallery(gallery_name: str):
     return render_template(
         "gallery.html.j2",
         galleries=get_galleries(),
-        gallery_media=partition_media(get_gallery_images(gallery)),
-        gallery_name=gallery,
-        title=f"{gallery} — {TITLE}",
+        gallery_media=partition_grid(get_gallery_images(gallery_name)),
+        gallery_name=gallery_name,
+        title=f"{gallery_name} — {TITLE}",
     )
 
 
@@ -66,7 +66,7 @@ def index():
     return render_template(
         "gallery.html.j2",
         galleries=get_galleries(),
-        gallery_media=partition_media(get_gallery_images()),
+        gallery_media=partition_grid(get_gallery_images()),
         gallery_name="",
         title=TITLE,
     )
