@@ -18,5 +18,8 @@ WORKDIR /app
 COPY app.py .
 COPY gallery.html.j2 .
 EXPOSE 5000
+USER nobody
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --spider --quiet http://127.0.0.1:5000/health || exit 1
 CMD ["waitress-serve", "--host", "0.0.0.0", "--port", "5000", "app:app"]
 LABEL org.opencontainers.image.source=https://github.com/streambinder/serica

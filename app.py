@@ -35,6 +35,11 @@ def partition_media(media: list[str]) -> list[list[str]]:
     return result
 
 
+@app.route("/health")
+def health():
+    return "OK", 200
+
+
 @app.route("/media")
 def media():
     return send_file(f"/data/{request.args.get('name')}", mimetype="image")
