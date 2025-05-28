@@ -7,7 +7,6 @@ on: # yamllint disable-line rule:truthy
 
 permissions:
   actions: read
-  attestations: none
   checks: none
   contents: read
   deployments: none
@@ -22,28 +21,28 @@ permissions:
   statuses: write
 
 jobs:
-  # codespell:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: codespell-project/actions-codespell@v2
-  #       with:
-  #         check_filenames: true
-  #         ignore_words_list: erro,nd
-  # super-linter:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #     - run: ln -sv .github/linters/commitlint.config.js ./
-  #     - uses: super-linter/super-linter/slim@v7.4.0
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         VALIDATE_ALL_CODEBASE: ${{ !contains(github.event_name, 'pull_request') }}
+  codespell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: codespell-project/actions-codespell@v2
+        with:
+          check_filenames: true
+          ignore_words_list: erro,nd
+  super-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: ln -sv .github/linters/commitlint.config.js ./
+      - uses: super-linter/super-linter/slim@v7.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: ${{ !contains(github.event_name, 'pull_request') }}
   docker:
     runs-on: ubuntu-latest
-    # needs: [codespell, super-linter]
+    needs: [codespell, super-linter]
     if: >-
       success() &&
       github.ref == 'refs/heads/master' &&
