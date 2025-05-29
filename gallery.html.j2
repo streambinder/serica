@@ -22,13 +22,23 @@
       color: #fff;
     }
 
+    .hamburger {
+      display: none;
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      font-size: 2em;
+      color: #ffffffd6;
+      cursor: pointer;
+      user-select: none;
+    }
+
     .navbar {
       position: absolute;
       top: 20px;
       right: 20px;
       display: flex;
       gap: 20px;
-      z-index: 20;
       font-weight: bold;
       font-size: 1rem;
       color: white;
@@ -36,7 +46,6 @@
       user-select: none;
     }
 
-    /* Link navbar */
     .navbar a {
       color: white;
       text-decoration: none;
@@ -46,7 +55,7 @@
     }
 
     .navbar a:hover {
-      background-color: rgba(255,255,255,0.2);
+      background-color: rgba(255, 255, 255, 0.2);
     }
 
     .gallery {
@@ -68,13 +77,13 @@
     }
     .cover-logo {
       position: absolute;
-      top: 5px;   /* distanza dal bordo superiore */
-      left: 20px;  /* distanza dal bordo sinistro */
+      top: 5px;
+      left: 20px;
       width: 200px !important;
       height: auto !important;
-      z-index: 10; /* sopra l'immagine */
-      pointer-events: none; /* per non bloccare click */
+      pointer-events: none;
     }
+
     .cover-title {
       position: absolute;
       top: 50%;
@@ -83,8 +92,7 @@
       color: #ffffffd6;
       font-size: 7em;
       font-weight: bold;
-      /* text-shadow: 2px 2px 6px rgba(0,0,0,0.7); */
-      pointer-events: none; /* so it doesn't interfere with clicks */
+      pointer-events: none;
       text-align: center;
       white-space: nowrap;
       font-optical-sizing: auto;
@@ -139,6 +147,69 @@
       display: block;
       transition: transform 0.3s ease;
     }
+
+    @media screen and (max-width: 768px) {
+      .hamburger {
+        display: block;
+      }
+
+      .navbar {
+        display: none;
+        position: absolute;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.65);
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 4px;
+      }
+
+      .navbar.show {
+        display: flex;
+      }
+
+      .row {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .row-1-2 .small,
+      .row-1-2 .large,
+      .row-2-1 .small,
+      .row-2-1 .large,
+      .row-fullscreen {
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible;
+      }
+
+      .row img,
+      .row-fullscreen img {
+        width: 100% !important;
+        height: auto !important;
+        object-fit: unset !important;
+        display: block;
+      }
+
+      .cover-title {
+        font-size: 2.5em;
+        white-space: normal;
+        padding: 0 10px;
+      }
+
+      .navbar {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        font-size: 0.9em;
+      }
+
+      .cover-logo {
+        width: 140px;
+        top: 10px;
+        left: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -151,15 +222,16 @@
       <div class="cover-title">{{ title }}</div>
       {% endif %}
 
-      <nav class="navbar">
-      {% if gallery_name != "" %}
-        <a href="/">Home</a>
-      {% endif %}
-      {% for gallery in galleries %}
-        <a href="/{{ gallery }}">{{ gallery }}</a>
-      {% endfor %}
-    </nav>
-
+      <div class="hamburger" onclick="toggleNavbar()">☰</div>
+        <nav class="navbar" id="navbar">
+        {% if gallery_name != "" %}
+          <a href="/">Home</a>
+        {% endif %}
+        {% for gallery in galleries %}
+          <a href="/{{ gallery }}">{{ gallery }}</a>
+        {% endfor %}
+        </nav>
+      </div>
     </div>
 
     {% for paths in gallery_media %}
@@ -181,5 +253,22 @@
     {% endfor %}
   </div>
 
+  <script>
+    function toggleNavbar() {
+      const nav = document.getElementById('navbar');
+      nav.classList.toggle('show');
+    }
+
+    // Close the navbar if click happens outside of it and outside the hamburger
+    document.addEventListener('click', function(event) {
+      const nav = document.getElementById('navbar');
+      const hamburger = document.querySelector('.hamburger');
+
+      // Check if click was outside navbar and hamburger
+      if (!nav.contains(event.target) && !hamburger.contains(event.target)) {
+        nav.classList.remove('show');
+      }
+    });
+  </script>
 </body>
 </html>
