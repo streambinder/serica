@@ -1,6 +1,6 @@
 FROM python:3.11-alpine AS builder
 
-RUN apk add --no-cache build-base=0.5-r3 libffi-dev=3.4.7-r0
+RUN apk add --no-cache build-base libffi-dev
 WORKDIR /app
 ENV VENV_PATH=/venv
 RUN python -m venv $VENV_PATH
@@ -10,7 +10,7 @@ RUN $VENV_PATH/bin/pip install --upgrade pip \
 
 FROM python:3.11-alpine
 
-RUN apk add --no-cache libffi=3.4.7-r0
+RUN apk add --no-cache libffi
 COPY --from=builder /venv /venv
 ENV VIRTUAL_ENV=/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
