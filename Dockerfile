@@ -1,4 +1,4 @@
-FROM python:3.13-alpine AS builder
+FROM python:3.14-alpine AS builder
 
 RUN apk add --no-cache build-base libffi-dev
 WORKDIR /app
@@ -8,7 +8,7 @@ COPY requirements.txt .
 RUN $VENV_PATH/bin/pip install --upgrade pip \
     && $VENV_PATH/bin/pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.13-alpine
+FROM python:3.14-alpine
 
 RUN apk add --no-cache libffi
 COPY --from=builder /venv /venv
