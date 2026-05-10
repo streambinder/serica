@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import os
-from typing import Optional
 
 from flask import Flask, render_template, request, send_file
+from flask.typing import ResponseReturnValue
 
 app = Flask(__name__, template_folder=os.getcwd())
 
@@ -14,7 +16,7 @@ def get_galleries() -> list[str]:
     return [fdir for fdir in os.listdir("/data") if os.path.isdir(f"/data/{fdir}")]
 
 
-def get_gallery_images(gallery_name: Optional[str] = None) -> list[str]:
+def get_gallery_images(gallery_name: str | None = None) -> list[str]:
     return [
         f"{gallery_name or ''}/{fname}"
         for fname in os.listdir(f"/data/{gallery_name or ''}")
@@ -24,7 +26,7 @@ def get_gallery_images(gallery_name: Optional[str] = None) -> list[str]:
 
 def partition_grid(items: list[str]) -> list[list[str]]:
     i = 0
-    result = []
+    result: list[list[str]] = []
     while i < len(items):
         for size in GRID_PATTERN:
             if i >= len(items):
@@ -36,22 +38,22 @@ def partition_grid(items: list[str]) -> list[list[str]]:
 
 
 @app.route("/health")
-def health():
+def health() -> ResponseReturnValue:
     return "OK", 200
 
 
 @app.route("/media")
-def media():
+def media() -> ResponseReturnValue:
     return send_file(f"/data/{request.args.get('name')}", mimetype="image")
 
 
 @app.route("/branding/<asset>")
-def branding(asset: str):
+def branding(asset: str) -> ResponseReturnValue:
     return send_file(f"/branding/{asset}", mimetype="image")
 
 
 @app.route("/<gallery_name>")
-def gallery(gallery_name: str):
+def gallery(gallery_name: str) -> ResponseReturnValue:
     return render_template(
         "gallery.html.j2",
         galleries=get_galleries(),
@@ -62,7 +64,7 @@ def gallery(gallery_name: str):
 
 
 @app.route("/")
-def index():
+def index() -> ResponseReturnValue:
     return render_template(
         "gallery.html.j2",
         galleries=get_galleries(),
