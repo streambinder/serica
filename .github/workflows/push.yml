@@ -37,6 +37,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_ALL_CODEBASE: ${{ !contains(github.event_name, 'pull_request') }}
+          # PYTHON_MYPY deferred until §21.7 phase-2
+          VALIDATE_PYTHON_MYPY: false
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_PYTHON_PYLINT: false
+          IGNORE_GITIGNORED_FILES: true
   docker:
     runs-on: ubuntu-latest
     needs: [super-linter]

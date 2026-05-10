@@ -1,22 +1,16 @@
-FROM python:3.14-alpine AS builder
+FROM ghcr.io/astral-sh/uv:0.11.12 AS uv
 
-RUN apk add --no-cache build-base libffi-dev
+FROM python:3.14-alpine AS builder
+COPY --from=uv /uv /usr/local/bin/uv
 WORKDIR /app
-ENV VENV_PATH=/venv
-RUN python -m venv $VENV_PATH
-COPY requirements.txt .
-RUN $VENV_PATH/bin/pip install --upgrade pip \
-    && $VENV_PATH/bin/pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-install-project
 
 FROM python:3.14-alpine
-
-RUN apk add --no-cache libffi
-COPY --from=builder /venv /venv
-ENV VIRTUAL_ENV=/venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 WORKDIR /app
-COPY app.py .
-COPY gallery.html.j2 .
+COPY --from=builder /app/.venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
+COPY app.py gallery.html.j2 ./
 EXPOSE 5000
 USER nobody
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
