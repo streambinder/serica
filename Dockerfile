@@ -4,7 +4,7 @@ RUN apk add --no-cache curl
 RUN curl -LsSf https://astral.sh/uv/0.11.12/install.sh | UV_INSTALL_DIR=/usr/local/bin sh
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-install-project
+RUN uv sync --frozen --no-install-project --no-dev
 
 FROM python:3.14-alpine
 WORKDIR /app
