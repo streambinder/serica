@@ -1,4 +1,4 @@
-FROM python:3.14-alpine AS builder
+FROM python:3.14.5-alpine AS builder
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 RUN apk add --no-cache curl
 RUN curl -LsSf https://astral.sh/uv/0.11.12/install.sh | UV_INSTALL_DIR=/usr/local/bin sh
@@ -6,7 +6,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project --no-dev
 
-FROM python:3.14-alpine
+FROM python:3.14.5-alpine
 WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
