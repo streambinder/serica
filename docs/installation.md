@@ -45,21 +45,21 @@ Serica expects the following layout under the volumes:
   favicon.png
 ```
 
-Each subdirectory under `/data` becomes one gallery page reachable at `/<gallery-name>`. The optional `cover.jpg` inside a gallery is used as that gallery's hero image; if missing, the gallery still renders. Files with extensions outside `.jpg`, `.jpeg`, `.png`, `.mp4`, `.mov` are ignored.
+Each subdirectory under `/data` becomes one gallery page reachable at `/<gallery-name>`. The optional `cover.jpg` inside a gallery is used as that gallery's cover background; if missing, the gallery still renders without a cover. Files with extensions outside `.jpg`, `.jpeg`, `.png`, `.mp4`, `.mov` are ignored.
 
-Serica fetches `logo.png` and `favicon.png` from `/branding`. Both are required for the template to render correctly.
+Serica fetches `logo.png` and `favicon.png` from `/branding`. Neither is strictly required — if missing, the corresponding `<img>` / `<link>` tag will just 404 — but galleries look unfinished without them.
 
 ## Configuration
 
 Serica reads its configuration from a single environment variable:
 
-| Variable | Required | Default     | Purpose                                                       |
-| -------- | -------- | ----------- | ------------------------------------------------------------- |
-| `TITLE`  | no       | `"Gallery"` | Site title shown on the homepage cover and in the page titles |
+| Variable | Required | Default     | Purpose                                                                                          |
+| -------- | -------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `TITLE`  | no       | `"Gallery"` | Site title used in the HTML `<title>` of the index page and each gallery (`{gallery} — {TITLE}`) |
 
 ## Custom build
 
-Serica is a single-file Flask app, so the usual Python toolchain works:
+Serica is a single-file Flask app, so the usual Python toolchain works. Prerequisites: Python `>=3.13` and [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
 git clone https://github.com/streambinder/serica.git
