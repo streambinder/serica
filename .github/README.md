@@ -1,3 +1,3 @@
-# Serica <a href="https://github.com/streambinder/serica"><img alt="documentation" align="left" src="https://github.com/streambinder.png?size=96"></a>
+# Serica <a href="https://davidepucci.it/doc/serica"><img alt="documentation" align="left" src="https://github.com/streambinder.png?size=96"></a>
 
-Lightweight Flask gallery server
+Documentation available at [davidepucci.it/doc/serica](https://davidepucci.it/doc/serica).
