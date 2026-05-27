@@ -22,7 +22,7 @@ docker run -d \
   ghcr.io/streambinder/serica:latest
 ```
 
-The container runs as `nobody` and exposes port 5000. A healthcheck pings `/health` every 30 seconds.
+The container runs as `nobody` and exposes port 5000, with a healthcheck pinging `/health` every 30 seconds.
 
 ## Directory layout
 
