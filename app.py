@@ -2,24 +2,31 @@ from __future__ import annotations
 
 import os
 
-from flask import Flask, render_template, request, send_file
+from flask import Flask, abort, render_template, request, send_file
 from flask.typing import ResponseReturnValue
+from werkzeug.security import safe_join
 
 app = Flask(__name__, template_folder=os.getcwd())
 
 TITLE = os.getenv("TITLE", "Gallery")
+DATA_DIR = "/data"
+BRANDING_DIR = "/branding"
 MEDIA_EXTENSIONS = (".jpg", ".jpeg", ".png", ".mp4", ".mov")
 GRID_PATTERN = [2, 2, 1]
 
 
 def get_galleries() -> list[str]:
-    return [fdir for fdir in os.listdir("/data") if os.path.isdir(f"/data/{fdir}")]
+    return [fdir for fdir in os.listdir(DATA_DIR) if os.path.isdir(f"{DATA_DIR}/{fdir}")]
 
 
 def get_gallery_images(gallery_name: str | None = None) -> list[str]:
+    # safe_join blocks .. traversal and absolute paths; None gallery_name = root
+    gallery_dir = safe_join(DATA_DIR, gallery_name or "")
+    if gallery_dir is None or not os.path.isdir(gallery_dir):
+        return []
     return [
         f"{gallery_name or ''}/{fname}"
-        for fname in os.listdir(f"/data/{gallery_name or ''}")
+        for fname in os.listdir(gallery_dir)
         if fname.lower().endswith(MEDIA_EXTENSIONS) and fname != "cover.jpg"
     ]
 
@@ -44,16 +51,25 @@ def health() -> ResponseReturnValue:
 
 @app.route("/media")
 def media() -> ResponseReturnValue:
-    return send_file(f"/data/{request.args.get('name')}", mimetype="image")
+    name = request.args.get("name", "")
+    path = safe_join(DATA_DIR, name)
+    if path is None or not name.lower().endswith(MEDIA_EXTENSIONS) or not os.path.isfile(path):
+        abort(404)
+    return send_file(path)
 
 
-@app.route("/branding/<asset>")
+@app.route("/branding/<path:asset>")
 def branding(asset: str) -> ResponseReturnValue:
-    return send_file(f"/branding/{asset}", mimetype="image")
+    path = safe_join(BRANDING_DIR, asset)
+    if path is None or not os.path.isfile(path):
+        abort(404)
+    return send_file(path)
 
 
 @app.route("/<gallery_name>")
 def gallery(gallery_name: str) -> ResponseReturnValue:
+    if safe_join(DATA_DIR, gallery_name) is None:
+        abort(404)
     return render_template(
         "gallery.html.j2",
         galleries=get_galleries(),
